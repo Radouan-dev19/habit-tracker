@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Habit Tracker V3</title>
+<style>
+body{margin:0;background:#f2f2f7;font-family:-apple-system;padding:12px}
+h1{text-align:center}
+.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+button{border:none;border-radius:12px;padding:12px;color:#fff;font-weight:bold}
+.g{background:#34c759}.r{background:#ff3b30}.b{background:#000}.n{background:#8e8e93}
+.week,.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.week div{text-align:center;font-weight:bold}
+.day{
+height:44px;
+line-height:44px;
+text-align:center;
+background:white;
+border-radius:10px;
+font-weight:bold;
+}
+.done{background:#34c759;color:white}
+.failed{background:#ff3b30;color:white}
+.exempt{background:#000;color:white}
+.empty{background:transparent}
+</style>
+</head>
+<body>
+<h1>Habitudes</h1>
+<div class="controls">
+<button class="g" onclick="mode='done'">Vert</button>
+<button class="r" onclick="mode='failed'">Rouge</button>
+<button class="b" onclick="mode='exempt'">Exempt</button>
+<button class="n" onclick="mode='clear'">Annuler</button>
+</div>
+
+<h2 id="title"></h2>
+
+<div class="week"><div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div><div>D</div></div>
+<div id="cal" class="cal"></div>
+
+<script>
+let d=new Date();
+let mode='done';
+let marks={};
+
+function draw(){
+cal.innerHTML='';
+title.textContent=d.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
+
+let first=new Date(d.getFullYear(),d.getMonth(),1);
+let last=new Date(d.getFullYear(),d.getMonth()+1,0);
+
+let offset=first.getDay()-1;
+if(offset<0) offset=6;
+
+for(let i=0;i<offset;i++){
+let e=document.createElement('div');
+e.className='day empty';
+cal.appendChild(e);
+}
+
+for(let day=1;day<=last.getDate();day++){
+let c=document.createElement('div');
+c.className='day';
+let k=d.getFullYear()+"-"+d.getMonth()+"-"+day;
+
+if(marks[k]) c.classList.add(marks[k]);
+
+c.textContent=day;
+c.onclick=()=>{
+if(mode==='clear') delete marks[k];
+else marks[k]=mode;
+draw();
+};
+cal.appendChild(c);
+}
+}
+draw();
+</script>
+</body>
+</html>
