@@ -3,96 +3,231 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Habit Tracker</title>
+  <title>Momentum</title>
 
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#f2f2f7">
+  <meta name="theme-color" content="#0f1115">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Habitudes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Momentum">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <style>
+    :root {
+      --bg: #0f1115;
+      --card: rgba(255,255,255,.10);
+      --card-strong: rgba(255,255,255,.16);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,.58);
+      --line: rgba(255,255,255,.12);
+      --green: #34c759;
+      --red: #ff453a;
+      --black: #050505;
+      --neutral: rgba(255,255,255,.22);
+      --blue: #0a84ff;
+      --yellow: #ffd60a;
+      --purple: #bf5af2;
+    }
+
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
     }
 
-    body {
+    html, body {
       margin: 0;
-      min-height: 100vh;
-      background: #f2f2f7;
-      color: #111;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(10,132,255,.35), transparent 36%),
+        radial-gradient(circle at 85% 12%, rgba(191,90,242,.28), transparent 32%),
+        var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    body {
       padding: env(safe-area-inset-top) 14px env(safe-area-inset-bottom);
     }
 
     .app {
       max-width: 430px;
       margin: 0 auto;
-      padding: 22px 0;
+      padding: 18px 0 26px;
     }
 
-    h1 {
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 6px 0 14px;
+    }
+
+    .title-block h1 {
+      margin: 0;
       font-size: 34px;
-      margin: 8px 0 18px;
-      letter-spacing: -1px;
+      letter-spacing: -1.4px;
+      line-height: 1;
+    }
+
+    .title-block p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-weight: 650;
+      font-size: 13px;
+    }
+
+    .mini-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(255,255,255,.24), rgba(255,255,255,.08));
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 1px rgba(255,255,255,.22), 0 18px 38px rgba(0,0,0,.22);
+      font-size: 22px;
+    }
+
+    .hero {
+      background: linear-gradient(160deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 18px;
+      box-shadow: 0 20px 55px rgba(0,0,0,.28);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      margin-bottom: 14px;
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .score-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+    }
+
+    .score {
+      font-size: 48px;
+      font-weight: 950;
+      letter-spacing: -2px;
+      transition: transform .35s cubic-bezier(.2,1.4,.35,1);
+    }
+
+    .score.bump {
+      transform: scale(1.08);
+    }
+
+    .score-label {
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .streak {
+      background: rgba(0,0,0,.28);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 18px;
+      padding: 10px 12px;
+      text-align: right;
+      min-width: 92px;
+    }
+
+    .streak strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .streak span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .progress {
+      height: 13px;
+      background: rgba(255,255,255,.16);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 14px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green), var(--blue), var(--purple));
+      transition: width .55s cubic-bezier(.22,1,.36,1);
+    }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .pillar {
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px;
+      padding: 11px 7px;
+      text-align: center;
+    }
+
+    .pillar .icon {
+      font-size: 19px;
+      margin-bottom: 3px;
+    }
+
+    .pillar .value {
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .pillar .name {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 850;
+      margin-top: 2px;
     }
 
     .month-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      margin: 16px 0 12px;
     }
 
     .month-title {
       font-size: 22px;
-      font-weight: 800;
+      font-weight: 950;
       text-transform: capitalize;
+      letter-spacing: -.4px;
     }
 
     button {
-      border: 0;
+      border: none;
+      color: inherit;
       cursor: pointer;
-      font-weight: 800;
     }
 
     .arrow {
       width: 44px;
       height: 44px;
       border-radius: 50%;
-      background: white;
-      color: #007aff;
-      font-size: 25px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.10);
+      color: #fff;
+      font-size: 23px;
+      font-weight: 900;
+      box-shadow: inset 0 1px rgba(255,255,255,.12);
     }
-
-    .choices {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .choice {
-      min-height: 48px;
-      border-radius: 15px;
-      color: white;
-      font-size: 13px;
-      opacity: .55;
-      transition: .15s;
-    }
-
-    .choice.active {
-      opacity: 1;
-      transform: scale(1.03);
-      outline: 3px solid #111;
-    }
-
-    .green { background: #34c759; }
-    .red { background: #ff3b30; }
-    .black { background: #000; }
-    .neutral { background: #8e8e93; }
 
     .week, .calendar {
       display: grid;
@@ -106,115 +241,365 @@
 
     .week div {
       text-align: center;
-      color: #8e8e93;
-      font-size: 13px;
-      font-weight: 800;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
     }
 
     .day {
-      height: 46px;
-      border-radius: 13px;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 17px;
-      font-weight: 800;
-      box-shadow: 0 2px 8px rgba(0,0,0,.05);
-      user-select: none;
+      height: 58px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.07);
+      padding: 4px;
+      position: relative;
+      box-shadow: 0 8px 18px rgba(0,0,0,.16);
+      transition: transform .16s cubic-bezier(.2,1.5,.4,1), background .2s;
+      animation: fadeIn .25s ease both;
     }
 
     .day:active {
-      transform: scale(.93);
+      transform: scale(.92);
     }
 
-    .empty {
+    .day.today {
+      outline: 2px solid rgba(10,132,255,.95);
+      outline-offset: 2px;
+    }
+
+    .day.empty-day {
       background: transparent;
+      border-color: transparent;
       box-shadow: none;
       pointer-events: none;
     }
 
-    .done {
-      background: #34c759;
-      color: white;
+    .day-num {
+      position: absolute;
+      left: 6px;
+      top: 4px;
+      font-size: 10px;
+      font-weight: 950;
+      color: rgba(255,255,255,.68);
+      z-index: 2;
+      text-shadow: 0 1px 4px rgba(0,0,0,.5);
     }
 
-    .failed {
-      background: #ff3b30;
-      color: white;
-    }
-
-    .exempt {
-      background: #000;
-      color: white;
-    }
-
-    .today {
-      outline: 3px solid #007aff;
-    }
-
-    .stats {
+    .quad {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 18px;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 3px;
+      width: 100%;
+      height: 100%;
     }
 
-    .card {
-      background: white;
-      border-radius: 18px;
-      padding: 14px 10px;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    .q {
+      border-radius: 7px;
+      background: rgba(255,255,255,.16);
+      transition: background .22s, transform .2s;
     }
 
-    .number {
-      font-size: 25px;
-      font-weight: 900;
-    }
+    .q.done { background: var(--green); }
+    .q.failed { background: var(--red); }
+    .q.exempt { background: #000; }
+    .q.clear { background: rgba(255,255,255,.16); }
 
-    .label {
-      color: #8e8e93;
-      font-size: 12px;
-      font-weight: 700;
-      margin-top: 4px;
-    }
-
-    .success {
-      margin-top: 12px;
-      background: white;
-      border-radius: 18px;
-      padding: 15px;
-      font-weight: 800;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,.05);
-    }
-
-    .hint {
+    .caption-card {
       margin-top: 14px;
-      color: #8e8e93;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 22px;
+      padding: 14px;
+      color: var(--muted);
       font-size: 13px;
-      line-height: 1.4;
-      text-align: center;
+      font-weight: 650;
+      line-height: 1.35;
+    }
+
+    .caption-card b {
+      color: #fff;
+    }
+
+    .focus-card {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .focus {
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 20px;
+      padding: 13px;
+      min-height: 86px;
+    }
+
+    .focus small {
+      color: var(--muted);
+      display: block;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .focus strong {
+      display: block;
+      font-size: 24px;
+      letter-spacing: -.6px;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.48);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .28s ease;
+      z-index: 20;
+    }
+
+    .overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sheet {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 30;
+      transform: translateY(105%);
+      transition: transform .42s cubic-bezier(.22,1,.36,1);
+      padding: 0 12px calc(12px + env(safe-area-inset-bottom));
+    }
+
+    .sheet.show {
+      transform: translateY(0);
+    }
+
+    .sheet-inner {
+      max-width: 430px;
+      margin: 0 auto;
+      background: rgba(28,28,30,.94);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 30px;
+      box-shadow: 0 -30px 90px rgba(0,0,0,.55);
+      padding: 12px 14px 16px;
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+    }
+
+    .grabber {
+      width: 44px;
+      height: 5px;
+      border-radius: 99px;
+      background: rgba(255,255,255,.28);
+      margin: 0 auto 13px;
+    }
+
+    .sheet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .sheet-head h2 {
+      margin: 0;
+      font-size: 25px;
+      letter-spacing: -.7px;
+    }
+
+    .close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      color: white;
+      font-weight: 950;
+      font-size: 17px;
+    }
+
+    .category {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 20px;
+      padding: 12px;
+      margin-bottom: 9px;
+    }
+
+    .cat-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-weight: 950;
+      font-size: 15px;
+    }
+
+    .cat-title span:last-child {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+    }
+
+    .action {
+      min-height: 38px;
+      border-radius: 13px;
+      background: rgba(255,255,255,.11);
+      color: white;
+      font-size: 12px;
+      font-weight: 900;
+      border: 1px solid transparent;
+      transition: transform .14s, border-color .14s, background .14s;
+    }
+
+    .action:active {
+      transform: scale(.92);
+    }
+
+    .action.selected {
+      border-color: white;
+      box-shadow: 0 0 0 2px rgba(255,255,255,.1);
+    }
+
+    .action.done { background: var(--green); }
+    .action.failed { background: var(--red); }
+    .action.exempt { background: #000; }
+    .action.clear { background: rgba(255,255,255,.18); }
+
+    .save-btn {
+      width: 100%;
+      min-height: 52px;
+      border-radius: 18px;
+      margin-top: 8px;
+      background: #fff;
+      color: #111;
+      font-size: 16px;
+      font-weight: 950;
+      transition: transform .16s;
+    }
+
+    .save-btn:active {
+      transform: scale(.96);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(24px + env(safe-area-inset-bottom));
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(255,255,255,.92);
+      color: #111;
+      padding: 12px 16px;
+      border-radius: 999px;
+      font-weight: 950;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 40;
+      transition: opacity .25s, transform .25s;
+      box-shadow: 0 18px 35px rgba(0,0,0,.26);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .confetti {
+      position: fixed;
+      width: 8px;
+      height: 14px;
+      border-radius: 3px;
+      z-index: 50;
+      pointer-events: none;
+      animation: confetti 900ms ease-out forwards;
+    }
+
+    @keyframes confetti {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(170px) rotate(280deg); opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
 
 <body>
   <main class="app">
-    <h1>Habitudes</h1>
+    <header class="header">
+      <div class="title-block">
+        <h1>Momentum</h1>
+        <p>Une journée claire. Quatre piliers.</p>
+      </div>
+      <div class="mini-badge">⚡</div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-top">
+        <div>
+          <div class="score-wrap">
+            <div class="score" id="globalScore">0%</div>
+          </div>
+          <div class="score-label">Niveau global du mois</div>
+        </div>
+
+        <div class="streak">
+          <strong id="bestStreak">0</strong>
+          <span>meilleure série</span>
+        </div>
+      </div>
+
+      <div class="progress">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <div class="pillars">
+        <div class="pillar">
+          <div class="icon">🏋️</div>
+          <div class="value"><span id="bodyRate">0</span>%</div>
+          <div class="name">Corps</div>
+        </div>
+        <div class="pillar">
+          <div class="icon">🧠</div>
+          <div class="value"><span id="mindRate">0</span>%</div>
+          <div class="name">Mental</div>
+        </div>
+        <div class="pillar">
+          <div class="icon">🎯</div>
+          <div class="value"><span id="controlRate">0</span>%</div>
+          <div class="name">Contrôle</div>
+        </div>
+        <div class="pillar">
+          <div class="icon">💼</div>
+          <div class="value"><span id="businessRate">0</span>%</div>
+          <div class="name">Business</div>
+        </div>
+      </div>
+    </section>
 
     <section class="month-bar">
       <button class="arrow" onclick="changeMonth(-1)">‹</button>
       <div class="month-title" id="monthTitle"></div>
       <button class="arrow" onclick="changeMonth(1)">›</button>
-    </section>
-
-    <section class="choices">
-      <button id="doneBtn" class="choice green active" onclick="setMode('done')">Vert</button>
-      <button id="failedBtn" class="choice red" onclick="setMode('failed')">Rouge</button>
-      <button id="exemptBtn" class="choice black" onclick="setMode('exempt')">Exempt</button>
-      <button id="clearBtn" class="choice neutral" onclick="setMode('clear')">Annuler</button>
     </section>
 
     <section class="week">
@@ -223,36 +608,66 @@
 
     <section class="calendar" id="calendar"></section>
 
-    <section class="stats">
-      <div class="card">
-        <div class="number" id="doneCount">0</div>
-        <div class="label">réussis</div>
+    <section class="focus-card">
+      <div class="focus">
+        <small>🎯 Contrôle</small>
+        <strong id="controlDays">0 j</strong>
+        <small>validés ce mois</small>
       </div>
-      <div class="card">
-        <div class="number" id="failedCount">0</div>
-        <div class="label">ratés</div>
-      </div>
-      <div class="card">
-        <div class="number" id="exemptCount">0</div>
-        <div class="label">exemptés</div>
+      <div class="focus">
+        <small>✅ Jours propres</small>
+        <strong id="perfectDays">0</strong>
+        <small>4/4 validés</small>
       </div>
     </section>
 
-    <section class="success" id="successRate">Réussite : 0%</section>
-
-    <p class="hint">
-      Les jours noirs sont exclus du calcul. Le bouton Annuler remet un jour en neutre.
-    </p>
+    <section class="caption-card">
+      <b>Lecture des cases :</b> haut gauche = Corps, haut droite = Mental,
+      bas gauche = Contrôle, bas droite = Business. Noir = exempté, gris = neutre.
+    </section>
   </main>
 
+  <div class="overlay" id="overlay" onclick="closeSheet()"></div>
+
+  <section class="sheet" id="sheet">
+    <div class="sheet-inner">
+      <div class="grabber"></div>
+
+      <div class="sheet-head">
+        <h2 id="sheetTitle">Jour</h2>
+        <button class="close" onclick="closeSheet()">×</button>
+      </div>
+
+      <div id="sheetCategories"></div>
+
+      <button class="save-btn" onclick="saveSheet()">Enregistrer</button>
+    </div>
+  </section>
+
+  <div class="toast" id="toast">Enregistré</div>
+
 <script>
-  const STORAGE_KEY = "habit_tracker_v4_marks";
+  const STORAGE_KEY = "momentum_v6_data";
+  const categories = [
+    { id: "body", label: "Corps", icon: "🏋️" },
+    { id: "mind", label: "Mental", icon: "🧠" },
+    { id: "control", label: "Contrôle", icon: "🎯" },
+    { id: "business", label: "Business", icon: "💼" }
+  ];
+
+  const statusLabels = {
+    done: "Validé",
+    failed: "Raté",
+    exempt: "Exempt",
+    clear: "Neutre"
+  };
 
   let currentDate = new Date();
-  let mode = "done";
-  let marks = loadMarks();
+  let selectedDay = null;
+  let draft = {};
+  let data = loadData();
 
-  function loadMarks() {
+  function loadData() {
     try {
       return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
     } catch {
@@ -260,29 +675,41 @@
     }
   }
 
-  function saveMarks() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(marks));
+  function saveData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
 
-  function setMode(newMode) {
-    mode = newMode;
+  function haptic() {
+    if (navigator.vibrate) navigator.vibrate(10);
+  }
 
-    doneBtn.classList.toggle("active", mode === "done");
-    failedBtn.classList.toggle("active", mode === "failed");
-    exemptBtn.classList.toggle("active", mode === "exempt");
-    clearBtn.classList.toggle("active", mode === "clear");
+  function keyFor(day, categoryId) {
+    const y = currentDate.getFullYear();
+    const m = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const d = String(day).padStart(2, "0");
+    return `${y}-${m}-${d}-${categoryId}`;
+  }
+
+  function monthPrefix() {
+    const y = currentDate.getFullYear();
+    const m = String(currentDate.getMonth() + 1).padStart(2, "0");
+    return `${y}-${m}-`;
+  }
+
+  function dayKeyBase(day) {
+    const y = currentDate.getFullYear();
+    const m = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const d = String(day).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  }
+
+  function statusClass(value) {
+    return value || "clear";
   }
 
   function changeMonth(value) {
     currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + value, 1);
     render();
-  }
-
-  function dayKey(day) {
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
-    const date = String(day).padStart(2, "0");
-    return `${year}-${month}-${date}`;
   }
 
   function render() {
@@ -295,7 +722,6 @@
 
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
 
@@ -304,7 +730,7 @@
 
     for (let i = 0; i < offset; i++) {
       const empty = document.createElement("div");
-      empty.className = "day empty";
+      empty.className = "day empty-day";
       calendar.appendChild(empty);
     }
 
@@ -312,12 +738,8 @@
 
     for (let day = 1; day <= lastDay.getDate(); day++) {
       const cell = document.createElement("div");
-      const key = dayKey(day);
-
       cell.className = "day";
-      cell.textContent = day;
-
-      if (marks[key]) cell.classList.add(marks[key]);
+      cell.style.animationDelay = `${Math.min(day * 8, 180)}ms`;
 
       const isToday =
         today.getFullYear() === year &&
@@ -326,45 +748,222 @@
 
       if (isToday) cell.classList.add("today");
 
-      cell.onclick = () => {
-        if (mode === "clear") {
-          delete marks[key];
-        } else {
-          marks[key] = mode;
-        }
+      cell.innerHTML = `
+        <div class="day-num">${day}</div>
+        <div class="quad">
+          ${categories.map(cat => {
+            const value = data[keyFor(day, cat.id)];
+            return `<div class="q ${statusClass(value)}"></div>`;
+          }).join("")}
+        </div>
+      `;
 
-        saveMarks();
-        render();
-      };
-
+      cell.onclick = () => openSheet(day);
       calendar.appendChild(cell);
     }
 
     updateStats();
   }
 
-  function updateStats() {
-    const prefix = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-`;
+  function openSheet(day) {
+    selectedDay = day;
+    draft = {};
 
-    let done = 0;
-    let failed = 0;
-    let exempt = 0;
-
-    Object.entries(marks).forEach(([key, value]) => {
-      if (!key.startsWith(prefix)) return;
-
-      if (value === "done") done++;
-      if (value === "failed") failed++;
-      if (value === "exempt") exempt++;
+    categories.forEach(cat => {
+      draft[cat.id] = data[keyFor(day, cat.id)] || "clear";
     });
 
-    doneCount.textContent = done;
-    failedCount.textContent = failed;
-    exemptCount.textContent = exempt;
+    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+    sheetTitle.textContent = date.toLocaleDateString("fr-FR", {
+      weekday: "long",
+      day: "numeric",
+      month: "long"
+    });
 
-    const totalCounted = done + failed;
-    const rate = totalCounted === 0 ? 0 : Math.round((done / totalCounted) * 100);
-    successRate.textContent = `Réussite : ${rate}%`;
+    renderSheetCategories();
+
+    overlay.classList.add("show");
+    sheet.classList.add("show");
+    haptic();
+  }
+
+  function closeSheet() {
+    overlay.classList.remove("show");
+    sheet.classList.remove("show");
+  }
+
+  function renderSheetCategories() {
+    sheetCategories.innerHTML = categories.map(cat => `
+      <div class="category">
+        <div class="cat-title">
+          <span>${cat.icon} ${cat.label}</span>
+          <span>${statusLabels[draft[cat.id]]}</span>
+        </div>
+        <div class="actions">
+          ${["done", "failed", "exempt", "clear"].map(status => `
+            <button
+              class="action ${status} ${draft[cat.id] === status ? "selected" : ""}"
+              onclick="setDraft('${cat.id}', '${status}')"
+            >
+              ${statusLabels[status]}
+            </button>
+          `).join("")}
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function setDraft(categoryId, status) {
+    draft[categoryId] = status;
+    renderSheetCategories();
+    haptic();
+  }
+
+  function saveSheet() {
+    if (!selectedDay) return;
+
+    let wasPerfectBefore = isPerfectDay(selectedDay);
+
+    categories.forEach(cat => {
+      const key = keyFor(selectedDay, cat.id);
+
+      if (draft[cat.id] === "clear") {
+        delete data[key];
+      } else {
+        data[key] = draft[cat.id];
+      }
+    });
+
+    saveData();
+    closeSheet();
+    render();
+    showToast("Enregistré");
+
+    let isPerfectAfter = isPerfectDay(selectedDay);
+    if (!wasPerfectBefore && isPerfectAfter) {
+      fireConfetti();
+      showToast("Journée parfaite");
+    }
+
+    haptic();
+  }
+
+  function isPerfectDay(day) {
+    return categories.every(cat => data[keyFor(day, cat.id)] === "done");
+  }
+
+  function updateStats() {
+    const prefix = monthPrefix();
+    const rates = {};
+    let globalTotal = 0;
+
+    categories.forEach(cat => {
+      let done = 0;
+      let failed = 0;
+
+      Object.entries(data).forEach(([key, value]) => {
+        if (!key.startsWith(prefix) || !key.endsWith(`-${cat.id}`)) return;
+        if (value === "done") done++;
+        if (value === "failed") failed++;
+      });
+
+      const rate = (done + failed) === 0 ? 0 : Math.round((done / (done + failed)) * 100);
+      rates[cat.id] = rate;
+      globalTotal += rate;
+    });
+
+    const global = Math.round(globalTotal / categories.length);
+
+    animateNumber(globalScore, global, "%");
+    progressFill.style.width = `${global}%`;
+
+    bodyRate.textContent = rates.body;
+    mindRate.textContent = rates.mind;
+    controlRate.textContent = rates.control;
+    businessRate.textContent = rates.business;
+
+    const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+    let perfect = 0;
+    let controlDone = 0;
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      if (isPerfectDay(day)) perfect++;
+      if (data[keyFor(day, "control")] === "done") controlDone++;
+    }
+
+    perfectDays.textContent = perfect;
+    controlDays.textContent = `${controlDone} j`;
+    bestStreak.textContent = calculateBestStreak(daysInMonth);
+  }
+
+  function calculateBestStreak(daysInMonth) {
+    let best = 0;
+    let current = 0;
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const hasGoodDay = categories.every(cat => {
+        const value = data[keyFor(day, cat.id)];
+        return value === "done" || value === "exempt";
+      });
+
+      if (hasGoodDay) {
+        current++;
+        best = Math.max(best, current);
+      } else {
+        current = 0;
+      }
+    }
+
+    return best;
+  }
+
+  function animateNumber(element, value, suffix = "") {
+    const previous = parseInt(element.dataset.value || "0", 10);
+    if (previous === value) {
+      element.textContent = `${value}${suffix}`;
+      return;
+    }
+
+    element.dataset.value = value;
+    element.classList.add("bump");
+
+    const start = performance.now();
+    const duration = 380;
+
+    function frame(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const current = Math.round(previous + (value - previous) * progress);
+      element.textContent = `${current}${suffix}`;
+
+      if (progress < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        element.classList.remove("bump");
+      }
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 1350);
+  }
+
+  function fireConfetti() {
+    const colors = ["#34c759", "#0a84ff", "#ffd60a", "#ff453a", "#bf5af2"];
+    for (let i = 0; i < 24; i++) {
+      const piece = document.createElement("div");
+      piece.className = "confetti";
+      piece.style.left = `${20 + Math.random() * 60}%`;
+      piece.style.top = `${18 + Math.random() * 12}%`;
+      piece.style.background = colors[i % colors.length];
+      piece.style.transform = `rotate(${Math.random() * 180}deg)`;
+      piece.style.animationDelay = `${Math.random() * 120}ms`;
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 1200);
+    }
   }
 
   if ("serviceWorker" in navigator) {
